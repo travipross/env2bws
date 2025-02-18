@@ -1,0 +1,149 @@
+{
+  "projects": [],
+  "secrets": [
+    {
+      "key": "UNIFI_WEB_PORT",
+      "value": "8444",
+      "note": "",
+      "project_ids": [
+        "8cf10605-5acc-472c-bd33-4a085ebfc3f7"
+      ],
+      "id": "f9eb91f3-39b5-4818-b8ae-477c2dd39c24"
+    },
+    {
+      "key": "UNIFI_DISCOVER_PORT",
+      "value": "8089",
+      "note": "",
+      "project_ids": [
+        "8cf10605-5acc-472c-bd33-4a085ebfc3f7"
+      ],
+      "id": "44dea346-7693-4f01-a117-7088dc115091"
+    },
+    {
+      "key": "UNIFI_CONFIG",
+      "value": "/path/to/data/unifi-controller/config",
+      "note": "",
+      "project_ids": [
+        "8cf10605-5acc-472c-bd33-4a085ebfc3f7"
+      ],
+      "id": "f04f215b-0d24-427d-9f8f-ab19ee1d4095"
+    },
+    {
+      "key": "DNSMASQ_WEB_PORT",
+      "value": "5380",
+      "note": "",
+      "project_ids": [
+        "8cf10605-5acc-472c-bd33-4a085ebfc3f7"
+      ],
+      "id": "23df37d6-a869-43ea-9d56-60c96dc9e18c"
+    },
+    {
+      "key": "DNSMASQ_DATA_PATH",
+      "value": "/path/to/data/dnsmasq/dnsmasq.conf",
+      "note": "",
+      "project_ids": [
+        "8cf10605-5acc-472c-bd33-4a085ebfc3f7"
+      ],
+      "id": "4d0d6260-bfe6-4bd7-a95e-91cb644953aa"
+    },
+    {
+      "key": "DNSMASQ_USER",
+      "value": "<username>",
+      "note": "",
+      "project_ids": [
+        "8cf10605-5acc-472c-bd33-4a085ebfc3f7"
+      ],
+      "id": "a0dd6b8c-c40a-4859-ad0e-6e5770da56e1"
+    },
+    {
+      "key": "DNSMASQ_PASS",
+      "value": "<password>",
+      "note": "",
+      "project_ids": [
+        "8cf10605-5acc-472c-bd33-4a085ebfc3f7"
+      ],
+      "id": "457a6bfc-2dc0-4978-80ba-21529a439273"
+    },
+    {
+      "key": "PROXY_DATA_DIR",
+      "value": "/path/to/data/proxy/data",
+      "note": "",
+      "project_ids": [
+        "8cf10605-5acc-472c-bd33-4a085ebfc3f7"
+      ],
+      "id": "ea2587bd-0076-4364-bb76-a0c0dd70ec34"
+    },
+    {
+      "key": "PROXY_DB_DIR",
+      "value": "/path/to/data/proxy/mysql",
+      "note": "",
+      "project_ids": [
+        "8cf10605-5acc-472c-bd33-4a085ebfc3f7"
+      ],
+      "id": "96293dae-5ee1-4d91-9187-ea78178facec"
+    },
+    {
+      "key": "PROXY_WEB_PORT",
+      "value": "81",
+      "note": "",
+      "project_ids": [
+        "8cf10605-5acc-472c-bd33-4a085ebfc3f7"
+      ],
+      "id": "92435fa9-4e11-457e-aca3-95409de44219"
+    },
+    {
+      "key": "LETSENCRYPT_DIR",
+      "value": "/path/to/data/letsencrypt",
+      "note": "",
+      "project_ids": [
+        "8cf10605-5acc-472c-bd33-4a085ebfc3f7"
+      ],
+      "id": "4bd9e3dc-4b82-4ce2-ad5f-0b01b3bdc99e"
+    },
+    {
+      "key": "DUCKDNS_TOKEN",
+      "value": "my-token-goes-here",
+      "note": "",
+      "project_ids": [
+        "8cf10605-5acc-472c-bd33-4a085ebfc3f7"
+      ],
+      "id": "a2e48002-e316-4415-bec5-267048f03e68"
+    },
+    {
+      "key": "DUCKDNS_DOMAINS",
+      "value": "domain1.duckdns.org,domain2.duckdns.org",
+      "note": "",
+      "project_ids": [
+        "8cf10605-5acc-472c-bd33-4a085ebfc3f7"
+      ],
+      "id": "5beccb5e-14c9-4bb3-8ead-8cc50768da58"
+    },
+    {
+      "key": "DUCKDNS_CONFIG_PATH",
+      "value": "/path/to/data/duckdns",
+      "note": "",
+      "project_ids": [
+        "8cf10605-5acc-472c-bd33-4a085ebfc3f7"
+      ],
+      "id": "9d0dcfec-7f61-46c0-aa4f-8605b14d8642"
+    },
+    {
+      "key": "PIHOLE_DNSMASQ_CONFIG_PATH",
+      "value": "/path/to/data/pihole/dnsmasq",
+      "note": "",
+      "project_ids": [
+        "8cf10605-5acc-472c-bd33-4a085ebfc3f7"
+      ],
+      "id": "d7a0b1f1-16aa-4f9c-9708-18a888314cc2"
+    },
+    {
+      "key": "PIHOLE_CONFIG_PATH",
+      "value": "/path/to/data/pihole/pihole",
+      "note": "",
+      "project_ids": [
+        "8cf10605-5acc-472c-bd33-4a085ebfc3f7"
+      ],
+      "id": "555f98f1-5ad1-455c-af4e-7fe40cb90440"
+    }
+  ]
+}
