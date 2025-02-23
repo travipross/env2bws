@@ -8,6 +8,7 @@ pub struct Project {
 }
 
 #[derive(Debug, Clone, serde::Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Secret {
     key: String,
     value: String,
