@@ -1,3 +1,4 @@
+//! Module used for hadnling CLI behaviour with [`clap`]
 use std::path::PathBuf;
 
 use clap::{
@@ -55,6 +56,8 @@ pub struct Cli {
     pub verbose: bool,
 }
 
+/// An [`ArgGroup`][clap::ArgGroup] that is used to determine which project a secret should be
+/// assigned to.
 #[derive(Debug, Clone, Args, PartialEq, Eq)]
 #[group(required = false, multiple = false)]
 pub struct ProjectAssignmentArgs {

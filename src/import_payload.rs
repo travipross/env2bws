@@ -1,12 +1,14 @@
 use crate::{DotEnvFile, EnvVar};
 use uuid::Uuid;
 
+/// Represents a single project as found in the Bitwarden Secrets Manager import JSON format.
 #[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct Project {
     pub id: uuid::Uuid,
     pub name: String,
 }
 
+/// Represents a single secret as found in the Bitwarden Secrets Manager import JSON format.
 #[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Secret {
@@ -18,6 +20,7 @@ pub struct Secret {
 }
 
 impl Secret {
+    /// Parses an individual secret from a given [`EnvVar`] with an optional `project_id`.
     fn from_env_var(value: EnvVar, project_id: Option<uuid::Uuid>) -> Self {
         Self {
             key: value.key,
@@ -29,12 +32,15 @@ impl Secret {
     }
 }
 
+/// Represents the entirety of the Bitwarden Secrets Manager import JSON format.
 #[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct ImportPayload {
     pub projects: Vec<Project>,
     pub secrets: Vec<Secret>,
 }
 
+/// The way in which all new secrets may (or may not) be assigned to projects in Bitwarden Secrets
+/// Manager.
 pub enum ProjectAssignment {
     None,
     Existing(uuid::Uuid),
@@ -42,6 +48,8 @@ pub enum ProjectAssignment {
 }
 
 impl ImportPayload {
+    /// Constructs a new representation of the import JSON from a parsed [`DotEnvFile`] using the
+    /// provided [`ProjectAssignment`] strategy.
     pub fn from_dotenv(dotenv: DotEnvFile, project_assignment: ProjectAssignment) -> Self {
         // Empty vector of projects means no projects are to be created
         let mut projects: Vec<Project> = vec![];
