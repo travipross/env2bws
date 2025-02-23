@@ -1,12 +1,5 @@
-#![doc = include_str!("../README.md")]
 use clap::Parser;
-use cli::Cli;
-use dotenv::DotEnvFile;
-use import_payload::{ImportPayload, ProjectAssignment};
-
-mod cli;
-mod dotenv;
-mod import_payload;
+use env2bws::{Cli, DotEnvFile, ImportPayload, ProjectAssignment};
 
 fn main() -> anyhow::Result<()> {
     // Process CLI args

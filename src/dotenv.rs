@@ -3,20 +3,25 @@ use std::{fs, ops::Deref, path::PathBuf};
 /// Represents a single environment variable with an optional comment
 #[derive(Debug, Clone)]
 #[cfg_attr(test, derive(fake::Dummy))]
-pub(crate) struct EnvVar {
-    pub(crate) key: String,
-    pub(crate) value: String,
-    pub(crate) comment: Option<String>,
-    pub(crate) temp_id: uuid::Uuid,
+pub struct EnvVar {
+    pub key: String,
+    pub value: String,
+    pub comment: Option<String>,
+    pub temp_id: uuid::Uuid,
 }
 
 /// Represents a file's worth of environment variables
 #[derive(Debug, Clone)]
 #[cfg_attr(test, derive(fake::Dummy))]
-pub(crate) struct DotEnvFile(Vec<EnvVar>);
+pub struct DotEnvFile(Vec<EnvVar>);
 
 impl DotEnvFile {
-    pub(crate) fn parse_from_file(
+    /// Parses variables from a given filepath pointing at a valid `.env` file.
+    ///
+    /// # Errors
+    ///
+    /// Will return error if file cannot be read (corrupt, not text, not found, etc)
+    pub fn parse_from_file(
         path: PathBuf,
         parse_comments: bool,
         verbose: bool,
@@ -70,12 +75,9 @@ impl DotEnvFile {
 
         Ok(Self(envs))
     }
-
-    pub(crate) fn vars(&self) -> Vec<EnvVar> {
-        self.0.clone()
-    }
 }
 
+/// Allows [`DotEnvFile`] to be iterated over like a [`Vec<EnvVar>`]
 impl Deref for DotEnvFile {
     type Target = Vec<EnvVar>;
 
