@@ -3,20 +3,20 @@ use std::{fs, ops::Deref, path::PathBuf};
 /// Represents a single environment variable with an optional comment
 #[derive(Debug, Clone)]
 #[cfg_attr(test, derive(fake::Dummy))]
-pub(crate) struct EnvVar {
-    pub(crate) key: String,
-    pub(crate) value: String,
-    pub(crate) comment: Option<String>,
-    pub(crate) temp_id: uuid::Uuid,
+pub struct EnvVar {
+    pub key: String,
+    pub value: String,
+    pub comment: Option<String>,
+    pub temp_id: uuid::Uuid,
 }
 
 /// Represents a file's worth of environment variables
 #[derive(Debug, Clone)]
 #[cfg_attr(test, derive(fake::Dummy))]
-pub(crate) struct DotEnvFile(Vec<EnvVar>);
+pub struct DotEnvFile(Vec<EnvVar>);
 
 impl DotEnvFile {
-    pub(crate) fn parse_from_file(
+    pub fn parse_from_file(
         path: PathBuf,
         parse_comments: bool,
         verbose: bool,
@@ -69,10 +69,6 @@ impl DotEnvFile {
         }
 
         Ok(Self(envs))
-    }
-
-    pub(crate) fn vars(&self) -> Vec<EnvVar> {
-        self.0.clone()
     }
 }
 

@@ -1,15 +1,14 @@
+use crate::{DotEnvFile, EnvVar};
 use uuid::Uuid;
 
-use crate::{dotenv::EnvVar, DotEnvFile};
-
 #[derive(Debug, Clone, serde::Serialize)]
-pub(crate) struct Project {
-    pub(crate) id: uuid::Uuid,
-    pub(crate) name: String,
+pub struct Project {
+    pub id: uuid::Uuid,
+    pub name: String,
 }
 
 #[derive(Debug, Clone, serde::Serialize)]
-pub(crate) struct Secret {
+pub struct Secret {
     key: String,
     value: String,
     note: String,
@@ -30,19 +29,19 @@ impl Secret {
 }
 
 #[derive(Debug, Clone, serde::Serialize)]
-pub(crate) struct ImportPayload {
+pub struct ImportPayload {
     projects: Vec<Project>,
     secrets: Vec<Secret>,
 }
 
-pub(crate) enum ProjectAssignment {
+pub enum ProjectAssignment {
     None,
     Existing(uuid::Uuid),
     New(String),
 }
 
 impl ImportPayload {
-    pub(crate) fn from_dotenv(dotenv: DotEnvFile, project_assignment: ProjectAssignment) -> Self {
+    pub fn from_dotenv(dotenv: DotEnvFile, project_assignment: ProjectAssignment) -> Self {
         // Empty vector of projects means no projects are to be created
         let mut projects: Vec<Project> = vec![];
 
@@ -64,9 +63,8 @@ impl ImportPayload {
         Self {
             projects,
             secrets: dotenv
-                .vars()
-                .into_iter()
-                .map(|v| Secret::from_env_var(v, assigned_id))
+                .iter()
+                .map(|v| Secret::from_env_var(v.clone(), assigned_id))
                 .collect(),
         }
     }

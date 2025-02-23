@@ -5,8 +5,8 @@ use clap::{
     Args, Parser,
 };
 
-// Set help output colors
-const STYLES: Styles = Styles::styled()
+/// Styling used for help output
+pub const STYLES: Styles = Styles::styled()
     .header(AnsiColor::Yellow.on_default())
     .usage(AnsiColor::Green.on_default())
     .literal(AnsiColor::Cyan.on_default())
@@ -17,7 +17,7 @@ const STYLES: Styles = Styles::styled()
 /// Manager's import feature.
 #[derive(Debug, Clone, Parser, PartialEq, Eq)]
 #[command(styles = STYLES, arg_required_else_help = true)]
-pub(crate) struct Cli {
+pub struct Cli {
     /// Path to the .env file to parse
     ///
     /// Note: The file must be in the format of a .env file, with each line containing a key-value
@@ -28,16 +28,16 @@ pub(crate) struct Cli {
     ///
     /// The file may have any name as long as it follows this format.
     #[arg(verbatim_doc_comment)]
-    pub(crate) dotenv_path: PathBuf,
+    pub dotenv_path: PathBuf,
 
     #[command(flatten)]
-    pub(crate) project_assignment: ProjectAssignment,
+    pub project_assignment: ProjectAssignmentArgs,
 
     /// Output file path
     ///
     /// If not provided, the output will be printed to stdout.
     #[arg(short, long)]
-    pub(crate) output_file: Option<PathBuf>,
+    pub output_file: Option<PathBuf>,
 
     /// Interpret comment lines directly above or directly beside a variable as notes on the secret
     ///
@@ -45,30 +45,30 @@ pub(crate) struct Cli {
     /// the variable. In order for comments to be associated with a variable defined under it, there
     /// must be no whitespace between the comment line and the variable declaration line
     #[arg(short = 'c', long)]
-    pub(crate) parse_comments: bool,
+    pub parse_comments: bool,
 
     /// Enable verbose output
     ///
     /// All verbose logging is written to stderr so that it doesn't interfere with the ability to
     /// pipe or redirect processed JSON output from stdout.
     #[arg(short, long)]
-    pub(crate) verbose: bool,
+    pub verbose: bool,
 }
 
 #[derive(Debug, Clone, Args, PartialEq, Eq)]
 #[group(required = false, multiple = false)]
-pub(crate) struct ProjectAssignment {
+pub struct ProjectAssignmentArgs {
     /// Assign all parsed secrets to an existing project having the given ID.
     ///
     /// Conflicts with --new-project-name.
     #[arg(short, long)]
-    pub(crate) project_id: Option<uuid::Uuid>,
+    pub project_id: Option<uuid::Uuid>,
 
     /// Define new project with the given name, to which all secrets will be assigned.
     ///
     /// Conflicts with --project-id.
     #[arg(short = 'n', long)]
-    pub(crate) new_project_name: Option<String>,
+    pub new_project_name: Option<String>,
 }
 
 #[cfg(test)]

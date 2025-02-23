@@ -9,6 +9,13 @@ authors = ["travipross"]
 keywords = ["bitwarden", "env", "dotenv"]
 categories = ["command-line-utilities"]
 
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "env2bws"
+path = "src/main.rs"
+
 [dependencies]
 anyhow = "1.0.95"
 clap = { version = "4.5.30", features = ["color", "derive"] }
