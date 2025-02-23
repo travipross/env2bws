@@ -1,20 +1,20 @@
 use crate::{DotEnvFile, EnvVar};
 use uuid::Uuid;
 
-#[derive(Debug, Clone, serde::Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct Project {
     pub id: uuid::Uuid,
     pub name: String,
 }
 
-#[derive(Debug, Clone, serde::Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Secret {
-    key: String,
-    value: String,
-    note: String,
-    project_ids: Vec<uuid::Uuid>,
-    id: uuid::Uuid,
+    pub key: String,
+    pub value: String,
+    pub note: String,
+    pub project_ids: Vec<uuid::Uuid>,
+    pub id: uuid::Uuid,
 }
 
 impl Secret {
@@ -29,10 +29,10 @@ impl Secret {
     }
 }
 
-#[derive(Debug, Clone, serde::Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct ImportPayload {
-    projects: Vec<Project>,
-    secrets: Vec<Secret>,
+    pub projects: Vec<Project>,
+    pub secrets: Vec<Secret>,
 }
 
 pub enum ProjectAssignment {
