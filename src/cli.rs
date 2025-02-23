@@ -1,9 +1,22 @@
 use std::path::PathBuf;
 
+use clap::{
+    builder::{styling::AnsiColor, Styles},
+    Args, Parser,
+};
+
+// Set help output colors
+const STYLES: Styles = Styles::styled()
+    .header(AnsiColor::Yellow.on_default())
+    .usage(AnsiColor::Green.on_default())
+    .literal(AnsiColor::Cyan.on_default())
+    .placeholder(AnsiColor::Cyan.on_default())
+    .invalid(AnsiColor::Red.on_default());
+
 /// Parse the given .env file and output in a JSON format that is compatible with Bitwarden Secrets
 /// Manager's import feature.
-#[derive(Debug, Clone, clap::Parser)]
-#[command(arg_required_else_help = true)]
+#[derive(Debug, Clone, Parser)]
+#[command(styles = STYLES, arg_required_else_help = true)]
 pub(crate) struct Cli {
     /// Path to the .env file to parse
     ///
@@ -39,7 +52,7 @@ pub(crate) struct Cli {
     pub(crate) verbose: bool,
 }
 
-#[derive(Debug, Clone, clap::Args)]
+#[derive(Debug, Clone, Args)]
 #[group(required = false, multiple = false)]
 pub(crate) struct ProjectAssignment {
     /// Assign all parsed secrets to an existing project having the given ID.

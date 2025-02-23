@@ -9,7 +9,7 @@ mod dotenv;
 mod import_payload;
 
 fn main() -> anyhow::Result<()> {
-    let cli = Cli::try_parse()?;
+    let cli = Cli::parse();
 
     let dotenv = DotEnvFile::parse_from_file(cli.dotenv_path, cli.parse_comments, cli.verbose)?;
     let project_assignment = match (
