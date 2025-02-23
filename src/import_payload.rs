@@ -71,3 +71,74 @@ impl ImportPayload {
         }
     }
 }
+
+#[cfg(test)]
+mod payload_tests {
+    use fake::{Fake, Faker};
+
+    use super::*;
+
+    #[test]
+    fn leaves_project_blank_on_secrets_when_none_supplied() {
+        let dotenv = Faker.fake::<DotEnvFile>();
+        let payload = ImportPayload::from_dotenv(dotenv, ProjectAssignment::None);
+
+        // No new projects listed
+        assert_eq!(payload.projects.len(), 0);
+
+        // No projects listed on any secret
+        payload
+            .secrets
+            .iter()
+            .for_each(|secret| assert_eq!(secret.project_ids.len(), 0));
+    }
+
+    #[test]
+    fn defines_new_project_and_sets_for_secrets() {
+        let dotenv = Faker.fake::<DotEnvFile>();
+        let payload = ImportPayload::from_dotenv(dotenv, ProjectAssignment::New(Faker.fake()));
+
+        // One new project listed
+        assert_eq!(payload.projects.len(), 1);
+        let project_id = payload
+            .projects
+            .first()
+            .expect("could not get first project")
+            .id;
+
+        // All secrets assigned to new project's id
+        payload.secrets.iter().for_each(|secret| {
+            assert_eq!(secret.project_ids.len(), 1);
+            assert_eq!(
+                secret
+                    .project_ids
+                    .first()
+                    .expect("could not get project id for secret"),
+                &project_id
+            )
+        });
+    }
+
+    #[test]
+    fn sets_existing_project_for_secrets() {
+        let dotenv = Faker.fake::<DotEnvFile>();
+        let project_id = Faker.fake::<Uuid>();
+        let payload =
+            ImportPayload::from_dotenv(dotenv, ProjectAssignment::Existing(project_id.clone()));
+
+        // No new projects listed
+        assert_eq!(payload.projects.len(), 0);
+
+        // All secrets assigned to existing project id
+        payload.secrets.iter().for_each(|secret| {
+            assert_eq!(secret.project_ids.len(), 1);
+            assert_eq!(
+                secret
+                    .project_ids
+                    .first()
+                    .expect("could not get project id for secret"),
+                &project_id
+            )
+        });
+    }
+}

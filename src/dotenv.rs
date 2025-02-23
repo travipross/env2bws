@@ -1,12 +1,18 @@
-use std::{fs, path::PathBuf};
+use std::{fs, ops::Deref, path::PathBuf};
 
+/// Represents a single environment variable with an optional comment
 #[derive(Debug, Clone)]
+#[cfg_attr(test, derive(fake::Dummy))]
 pub(crate) struct EnvVar {
     pub(crate) key: String,
     pub(crate) value: String,
     pub(crate) comment: Option<String>,
     pub(crate) temp_id: uuid::Uuid,
 }
+
+/// Represents a file's worth of environment variables
+#[derive(Debug, Clone)]
+#[cfg_attr(test, derive(fake::Dummy))]
 pub(crate) struct DotEnvFile(Vec<EnvVar>);
 
 impl DotEnvFile {
@@ -72,5 +78,101 @@ impl DotEnvFile {
 
     pub(crate) fn vars(&self) -> Vec<EnvVar> {
         self.0.clone()
+    }
+}
+
+impl Deref for DotEnvFile {
+    type Target = Vec<EnvVar>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+#[cfg(test)]
+mod env_parsing_tests {
+    use std::io::Write;
+
+    use tempfile::NamedTempFile;
+
+    use super::*;
+
+    const FILE_WITH_COMMENTS: &str = r#"#This is a comment at the top of the file
+ENV_1="env 1" # Comment 1
+# Comments above variables should be ignored
+ENV_2="env 2"
+
+
+# Whitespace is ignored
+ENV_3=env3 # No quotes
+ENV_4=env 4 # With spaces"#;
+
+    const FILE_WITHOUT_COMMENTS: &str = r#"ENV_1="env 1"
+ENV_2="env 2"
+ENV_3=env3
+ENV_4=env 4"#;
+
+    #[test_case::test_matrix(
+        [FILE_WITHOUT_COMMENTS, FILE_WITH_COMMENTS],
+        [true, false],
+        false
+    )]
+    fn can_parse_happy_path(input: &str, parse_comments: bool, verbose: bool) {
+        let mut tmp_file = NamedTempFile::new().expect("could not create temp file");
+        tmp_file
+            .write_all(input.as_bytes())
+            .expect("could not write to temp file");
+
+        let res = DotEnvFile::parse_from_file(tmp_file.path().to_owned(), parse_comments, verbose);
+        assert!(res.is_ok(), "{res:?}");
+    }
+
+    #[test]
+    fn parses_comments_if_present() {
+        let mut tmp_file = NamedTempFile::new().expect("could not create temp file");
+        tmp_file
+            .write_all(FILE_WITH_COMMENTS.as_bytes())
+            .expect("could not write to temp file");
+
+        let parsed = DotEnvFile::parse_from_file(tmp_file.path().to_owned(), true, false)
+            .expect("failed to parse file");
+
+        assert_eq!(parsed.len(), 4);
+        if let Some(env_var) = parsed.get(0) {
+            assert_eq!(env_var.comment, Some("Comment 1".to_owned()));
+            assert_eq!(env_var.key, "ENV_1".to_owned());
+            assert_eq!(env_var.value, "\"env 1\"".to_owned());
+        }
+        if let Some(env_var) = parsed.get(1) {
+            assert_eq!(env_var.comment, None);
+            assert_eq!(env_var.key, "ENV_2".to_owned());
+            assert_eq!(env_var.value, "\"env 2\"".to_owned());
+        }
+        if let Some(env_var) = parsed.get(2) {
+            assert_eq!(env_var.comment, Some("No quotes".to_owned()));
+            assert_eq!(env_var.key, "ENV_3".to_owned());
+            assert_eq!(env_var.value, "env3".to_owned());
+        }
+        if let Some(env_var) = parsed.get(3) {
+            assert_eq!(env_var.comment, Some("With spaces".to_owned()));
+            assert_eq!(env_var.key, "ENV_4".to_owned());
+            assert_eq!(env_var.value, "env 4".to_owned());
+        }
+    }
+
+    #[test]
+    fn ignores_comments_if_not_enabled() {
+        let mut tmp_file = NamedTempFile::new().expect("could not create temp file");
+        tmp_file
+            .write_all(FILE_WITH_COMMENTS.as_bytes())
+            .expect("could not write to temp file");
+
+        let parsed = DotEnvFile::parse_from_file(tmp_file.path().to_owned(), false, false)
+            .expect("failed to parse file");
+
+        assert_eq!(parsed.len(), 4);
+        parsed
+            .iter()
+            .for_each(|env_var| assert_eq!(env_var.comment, None));
     }
 }

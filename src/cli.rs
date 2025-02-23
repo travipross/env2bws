@@ -15,7 +15,7 @@ const STYLES: Styles = Styles::styled()
 
 /// Parse the given .env file and output in a JSON format that is compatible with Bitwarden Secrets
 /// Manager's import feature.
-#[derive(Debug, Clone, Parser)]
+#[derive(Debug, Clone, Parser, PartialEq, Eq)]
 #[command(styles = STYLES, arg_required_else_help = true)]
 pub(crate) struct Cli {
     /// Path to the .env file to parse
@@ -35,7 +35,7 @@ pub(crate) struct Cli {
 
     /// Output file path
     ///
-    /// If not provided, the output will be printed to stdout
+    /// If not provided, the output will be printed to stdout.
     #[arg(short, long)]
     pub(crate) output_file: Option<PathBuf>,
 
@@ -48,11 +48,14 @@ pub(crate) struct Cli {
     pub(crate) parse_comments: bool,
 
     /// Enable verbose output
+    ///
+    /// All verbose logging is written to stderr so that it doesn't interfere with the ability to
+    /// pipe or redirect processed JSON output from stdout.
     #[arg(short, long)]
     pub(crate) verbose: bool,
 }
 
-#[derive(Debug, Clone, Args)]
+#[derive(Debug, Clone, Args, PartialEq, Eq)]
 #[group(required = false, multiple = false)]
 pub(crate) struct ProjectAssignment {
     /// Assign all parsed secrets to an existing project having the given ID.
@@ -66,4 +69,33 @@ pub(crate) struct ProjectAssignment {
     /// Conflicts with --project-id.
     #[arg(short = 'n', long)]
     pub(crate) new_project_name: Option<String>,
+}
+
+#[cfg(test)]
+mod cli_tests {
+    use clap::error::ErrorKind;
+
+    use super::*;
+
+    #[test]
+    fn verify_cli() {
+        use clap::CommandFactory;
+        Cli::command().debug_assert();
+    }
+
+    #[test_case::test_case(&mut [".env"] => matches Ok(_); "happy path minimum")]
+    #[test_case::test_case(&mut [".env", "--output-file", "out.json", "--verbose", "--parse-comments"] => matches Ok(_); "happy path no project")]
+    #[test_case::test_case(&mut [".env", "--output-file", "out.json", "--new-project-name", "my-new-project", "--verbose", "--parse-comments"] => matches Ok(_); "happy path new project")]
+    #[test_case::test_case(&mut [".env", "--project-id", &uuid::Uuid::new_v4().to_string(), "--output-file", "out.json", "--verbose", "--parse-comments"] => matches Ok(_); "happy path existing project")]
+    #[test_case::test_case(&mut [".env", "--project-id", &uuid::Uuid::new_v4().to_string(), "--new-project-name", "my-new-project"] => matches Err(ErrorKind::ArgumentConflict); "fails when conflicting new/existing project")]
+    #[test_case::test_case(&mut [] => matches Err(ErrorKind::DisplayHelpOnMissingArgumentOrSubcommand); "help on missing args")]
+    #[test_case::test_case(&mut ["--help"] => matches Err(ErrorKind::DisplayHelp); "help when requested")]
+    #[test_case::test_case(&mut ["-h"] => matches Err(ErrorKind::DisplayHelp); "help when requested short")]
+    fn parse_args(args: &mut [&str]) -> Result<Cli, ErrorKind> {
+        // Combine test case args wiht full command string
+        let mut cmd_and_args = vec!["first-arg-is-ignored-by-parser"];
+        cmd_and_args.extend_from_slice(args);
+
+        Cli::try_parse_from(cmd_and_args).map_err(|e| e.kind())
+    }
 }

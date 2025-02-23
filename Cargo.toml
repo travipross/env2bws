@@ -15,3 +15,8 @@ clap = { version = "4.5.30", features = ["color", "derive"] }
 serde = { version = "1.0.217", features = ["derive"] }
 serde_json = "1.0.138"
 uuid = { version = "1.13.2", features = ["v4", "serde"] }
+
+[dev-dependencies]
+fake = { version = "4.0.0", features = ["derive", "uuid"] }
+tempfile = "3.17.1"
+test-case = "3.3.1"
