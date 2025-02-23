@@ -30,8 +30,7 @@ impl DotEnvFile {
         // Map over all lines of the file, extracting variables while ignoring / filtering out empty lines and comments
         let envs = raw
             .lines()
-            .into_iter()
-            .map(|line| {
+            .filter_map(|line| {
                 // Trim the line for easier parsing
                 let trimmed_line = line.trim();
 
@@ -51,22 +50,18 @@ impl DotEnvFile {
                     None => (trimmed_line, None),
                 };
 
-                // Split the content into key and value
-                match content.split_once('=') {
-                    Some((key, value)) => Some(EnvVar {
-                        key: key.to_string(),
-                        value: value.to_string(),
-                        comment: if parse_comments {
-                            comment.map(ToOwned::to_owned)
-                        } else {
-                            None
-                        },
-                        temp_id: uuid::Uuid::new_v4(),
-                    }),
-                    None => None,
-                }
-            })
-            .filter_map(|x| x) // Filter out any invalid line and unwrap the Option for the rest
+                // Split the content into key and value, then construct `EnvVar`
+                content.split_once('=').map(|(key, value)| EnvVar {
+                    key: key.to_string(),
+                    value: value.to_string(),
+                    comment: if parse_comments {
+                        comment.map(ToOwned::to_owned)
+                    } else {
+                        None
+                    },
+                    temp_id: uuid::Uuid::new_v4(),
+                })
+            }) // Filter out any invalid line and unwrap the Option for the rest
             .collect::<Vec<EnvVar>>();
 
         if verbose {

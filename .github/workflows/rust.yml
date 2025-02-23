@@ -10,13 +10,26 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  RUSTFLAGS: -D warnings  # Exit with non-zero status if warnings are emitted
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Build
         run: cargo build --verbose
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
       - name: Test
         run: cargo test --verbose
+  check-and-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check
+        run: cargo check --verbose
+      - name: Clippy
+        run: cargo clippy --verbose
