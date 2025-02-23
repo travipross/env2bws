@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2](https://github.com/travipross/env2bws/compare/v0.1.1...v0.1.2) - 2025-02-23
+
+### Added
+
+- expose as lib
+
+### Fixed
+
+- set keys to camelCase during import payload serialization
+- address lint errors from clippy
+
+### Other
+
+- populate missing docstrings throughout crate
+- update README with more detailed usage information
+- add test to assert validity of sample input and output in project
+- fix secret name in release-plz workflows
+- deny warnings in rust jobs
+- add check and lint jobs
+- pull pipeline secrets from BWS instead of storing in Github directly
+
 ## [0.1.1](https://github.com/travipross/env2bws/compare/v0.1.0...v0.1.1) - 2025-02-23
 
 ### Added
