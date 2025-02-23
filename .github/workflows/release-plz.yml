@@ -15,10 +15,9 @@ jobs:
       - name: Get API Tokens with BWS
         uses: bitwarden/sm-action@v2
         with:
-          access_token: ${{ secrets.BW_ACCESS_TOKEN }}
+          access_token: ${{ secrets.BWS_ACCESS_TOKEN }}
           base_url: https://vault.bitwarden.com
           secrets: |
-            5d7603bf-9f6c-4570-88ac-b2880066afc9 > CARGO_REGISTRY_TOKEN
             04b9554e-f7af-497b-8095-b28d011e347d > RELEASE_PLZ_TOKEN
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -44,11 +43,19 @@ jobs:
       group: release-plz-${{ github.ref }}
       cancel-in-progress: false
     steps:
+      - name: Get API Tokens with BWS
+        uses: bitwarden/sm-action@v2
+        with:
+          access_token: ${{ secrets.BWS_ACCESS_TOKEN }}
+          base_url: https://vault.bitwarden.com
+          secrets: |
+            5d7603bf-9f6c-4570-88ac-b2880066afc9 > CARGO_REGISTRY_TOKEN
+            04b9554e-f7af-497b-8095-b28d011e347d > RELEASE_PLZ_TOKEN
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.RELEASE_PLZ_TOKEN }}
+          token: ${{ env.RELEASE_PLZ_TOKEN }}
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
       - name: Run release-plz
@@ -56,5 +63,5 @@ jobs:
         with:
           command: release-pr
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_PLZ_TOKEN }}
-          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+          GITHUB_TOKEN: ${{ env.RELEASE_PLZ_TOKEN }}
+          CARGO_REGISTRY_TOKEN: ${{ env.CARGO_REGISTRY_TOKEN }}
