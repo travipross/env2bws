@@ -38,7 +38,7 @@ mod test_sample {
                 assert_eq!(s1.key, s2.key);
                 assert_eq!(s1.value, s2.value);
                 assert_eq!(s1.note, s2.note);
-                assert_ne!(s1.id, s2.id);  // IDs are randomly generated and shouldn't match
+                assert_ne!(s1.id, s2.id); // IDs are randomly generated and shouldn't match
             });
     }
 }
