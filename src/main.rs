@@ -9,9 +9,13 @@ mod dotenv;
 mod import_payload;
 
 fn main() -> anyhow::Result<()> {
-    let cli = Cli::try_parse()?;
+    // Process CLI args
+    let cli = Cli::parse();
 
+    // Load dotenv struct from file
     let dotenv = DotEnvFile::parse_from_file(cli.dotenv_path, cli.parse_comments, cli.verbose)?;
+
+    // Determine type of project assignment for secrets based on provided arguments
     let project_assignment = match (
         cli.project_assignment.project_id,
         cli.project_assignment.new_project_name,
@@ -22,8 +26,10 @@ fn main() -> anyhow::Result<()> {
         _ => unreachable!(), // Should not be possible due to conflicts_with attribute on parser
     };
 
+    // Prepare import payload in format expected by Bitwarden Secrets Manager
     let payload = ImportPayload::from_dotenv(dotenv, project_assignment);
 
+    // Depending on whether an output path is provided, either write out JSON result, or print to stdout
     if let Some(path) = cli.output_file {
         // Ensure path has .json extension and add it if not
         let path = match path.extension() {
