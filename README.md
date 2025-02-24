@@ -1,11 +1,12 @@
 # env2bws
 
 [![Crates.io Version](https://img.shields.io/crates/v/env2bws)](https://crates.io/crates/env2bws)
+[![GitHub Release](https://img.shields.io/github/v/release/travipross/env2bws?label=Github%20Release)](https://github.com/travipross/env2bws/releases/latest)
 [![docs.rs](https://img.shields.io/docsrs/env2bws)](https://docs.rs/env2bws/latest/env2bws/)
-[![Crates.io Size](https://img.shields.io/crates/size/env2bws)](https://crates.io/crates/env2bws)
-[![Crates.io Total Downloads](https://img.shields.io/crates/d/env2bws)](https://crates.io/crates/env2bws)
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/travipross/env2bws/rust.yml)](https://github.com/travipross/env2bws)
-[![GitHub License](https://img.shields.io/github/license/travipross/env2bws)](https://github.com/travipross/env2bws)
+[![Crates.io Total Downloads](https://img.shields.io/crates/d/env2bws)](https://crates.io/crates/env2bws)
+[![Crates.io Size](https://img.shields.io/crates/size/env2bws)](https://crates.io/crates/env2bws)
+[![GitHub License](https://img.shields.io/github/license/travipross/env2bws)](https://github.com/travipross/env2bws/releases/latest)
 
 A CLI tool for converting a `.env` file into a JSON format that can be imported by [Bitwarden Secrets Manager](https://bitwarden.com/help/import-secrets-data/).
 
