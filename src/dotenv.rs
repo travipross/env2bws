@@ -1,6 +1,8 @@
 //! Structured representation of `.env` files
 use std::{fs, ops::Deref, path::PathBuf};
 
+use anyhow::anyhow;
+
 /// Represents a single environment variable with an optional comment
 #[derive(Debug, Clone)]
 #[cfg_attr(test, derive(fake::Dummy))]
@@ -31,7 +33,12 @@ impl DotEnvFile {
             eprintln!("Reading from file at {}", path.to_string_lossy());
         }
 
-        let raw = fs::read_to_string(path)?;
+        let raw = fs::read_to_string(&path).map_err(|e| {
+            anyhow!(
+                "Failed to load file at {path}: {e}",
+                path = path.to_string_lossy()
+            )
+        })?;
 
         // Map over all lines of the file, extracting variables while ignoring / filtering out empty lines and comments
         let envs = raw
