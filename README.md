@@ -97,7 +97,7 @@ That would be parsed as a secret with the comment being stored as a "note":
 }
 ```
 
-### Assinging secrets to projects
+### Assigning secrets to projects
 
 As outlined in the [BWS documentation](https://bitwarden.com/help/import-secrets-data/#condition-an-import-file), secrets may optionally be assigned to projects in one of multiple ways:
 

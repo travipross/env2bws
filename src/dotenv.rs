@@ -1,3 +1,4 @@
+//! Structured representation of `.env` files
 use std::{fs, ops::Deref, path::PathBuf};
 
 /// Represents a single environment variable with an optional comment

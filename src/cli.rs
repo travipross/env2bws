@@ -1,4 +1,4 @@
-//! Module used for hadnling CLI behaviour with [`clap`]
+//! Module used for handling CLI behaviour with [`clap`]
 use std::path::PathBuf;
 
 use clap::{
@@ -95,7 +95,7 @@ mod cli_tests {
     #[test_case::test_case(&mut ["--help"] => matches Err(ErrorKind::DisplayHelp); "help when requested")]
     #[test_case::test_case(&mut ["-h"] => matches Err(ErrorKind::DisplayHelp); "help when requested short")]
     fn parse_args(args: &mut [&str]) -> Result<Cli, ErrorKind> {
-        // Combine test case args wiht full command string
+        // Combine test case args with full command string
         let mut cmd_and_args = vec!["first-arg-is-ignored-by-parser"];
         cmd_and_args.extend_from_slice(args);
 

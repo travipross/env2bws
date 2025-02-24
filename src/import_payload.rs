@@ -1,3 +1,4 @@
+//! Structured representation of Bitwarden Secrets Manager import JSON format
 use crate::{DotEnvFile, EnvVar};
 use uuid::Uuid;
 
