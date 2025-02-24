@@ -6,6 +6,9 @@ permissions:
 on:
   release:
     types: [created]
+  push:
+    tags:
+      - test
 
 jobs:
   upload-assets:
@@ -36,4 +39,3 @@ jobs:
           zip: windows
           token: ${{ env.RELEASE_PLZ_TOKEN }}
           ref: refs/tags/v0.1.2
-          dry-run: true
