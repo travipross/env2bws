@@ -54,6 +54,12 @@ pub struct Cli {
     /// pipe or redirect processed JSON output from stdout.
     #[arg(short, long)]
     pub verbose: bool,
+
+    /// If the chosen output file already exists, force it to be overwritten
+    ///
+    /// Requires -o/--output-file option
+    #[arg(short, long, requires = "output_file")]
+    pub force_overwrite: bool,
 }
 
 /// An [`ArgGroup`][clap::ArgGroup] that is used to determine which project a secret should be

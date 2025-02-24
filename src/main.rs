@@ -1,3 +1,9 @@
+use std::{
+    fs::OpenOptions,
+    io::{self, Write},
+};
+
+use anyhow::anyhow;
 use clap::Parser;
 use env2bws::{Cli, DotEnvFile, ImportPayload, ProjectAssignment};
 
@@ -33,7 +39,29 @@ fn main() -> anyhow::Result<()> {
 
         // Write the JSON payload to the output file
         eprintln!("Writing to file at {}", path.to_string_lossy());
-        std::fs::write(path, serde_json::to_string_pretty(&payload)?)?;
+
+        let mut file = match OpenOptions::new()
+            .write(true)
+            .create_new(true) // Only create if it doesn't exist
+            .open(&path)
+        {
+            Ok(f) => f, // Success on first try
+            Err(e) if e.kind() == io::ErrorKind::AlreadyExists => {
+                if cli.force_overwrite {
+                    eprintln!("File already exists in current location. Writing over contents because --force-overwrite was provided");
+                    // Retry with overwrite if allowed
+                    OpenOptions::new()
+                        .write(true)
+                        .truncate(true) // Overwrite existing file
+                        .open(&path)?
+                } else {
+                    return Err(anyhow!("File already exists at the current location. Try selecting a different output file or re-running with --force-overwrite"));
+                }
+            }
+            Err(e) => return Err(anyhow::anyhow!("Failed to create file: {}", e)),
+        };
+
+        file.write_all(serde_json::to_string_pretty(&payload)?.as_bytes())?;
     } else {
         println!("{}", serde_json::to_string_pretty(&payload)?);
     }
