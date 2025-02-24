@@ -35,5 +35,3 @@ jobs:
           tar: unix
           zip: windows
           token: ${{ env.RELEASE_PLZ_TOKEN }}
-          ref: refs/tags/v0.1.2
-          dry-run: true
