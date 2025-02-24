@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0](https://github.com/travipross/env2bws/compare/v0.1.2...v0.2.0) - 2025-02-24
+
+### Added
+
+- [**breaking**] remove cli module from public API of crate
+- add option to prevent overwriting existing output files unless overridden
+
+### Fixed
+
+- give better error message when input file can't be found
+
+### Other
+
+- publish build artifacts as release assets
+- fix various typos in README and module documentation
+- report typos in Github Actions
+
 ## [0.1.2](https://github.com/travipross/env2bws/compare/v0.1.1...v0.1.2) - 2025-02-23
 
 ### Added
