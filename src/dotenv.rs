@@ -40,8 +40,21 @@ impl DotEnvFile {
             )
         })?;
 
+        DotEnvFile::parse_from_str(&raw, parse_comments, verbose)
+    }
+
+    /// Parses variables from a given string slice.
+    ///
+    /// # Errors
+    ///
+    /// Will return error if file cannot be read (corrupt, not text, not found, etc)
+    pub fn parse_from_str(
+        input: &str,
+        parse_comments: bool,
+        verbose: bool,
+    ) -> anyhow::Result<Self> {
         // Map over all lines of the file, extracting variables while ignoring / filtering out empty lines and comments
-        let envs = raw
+        let envs = input
             .lines()
             .filter_map(|line| {
                 // Trim the line for easier parsing
@@ -123,12 +136,7 @@ ENV_4=env 4"#;
         false
     )]
     fn can_parse_happy_path(input: &str, parse_comments: bool, verbose: bool) {
-        let mut tmp_file = NamedTempFile::new().expect("could not create temp file");
-        tmp_file
-            .write_all(input.as_bytes())
-            .expect("could not write to temp file");
-
-        let res = DotEnvFile::parse_from_file(tmp_file.path().to_owned(), parse_comments, verbose);
+        let res = DotEnvFile::parse_from_str(input, parse_comments, verbose);
         assert!(res.is_ok(), "{res:?}");
     }
 
