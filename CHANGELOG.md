@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.2](https://github.com/travipross/env2bws/compare/v0.2.1...v0.2.2) - 2025-03-02
+
+### Added
+
+- break out functionality for parsing individual env var
+
+### Fixed
+
+- re-export EnvVar struct from dotenv crate to preseve API compatibility
+- break out functionality to parse from str
+
 ## [0.2.1](https://github.com/travipross/env2bws/compare/v0.2.0...v0.2.1) - 2025-02-24
 
 ### Other
