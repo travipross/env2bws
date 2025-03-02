@@ -1,5 +1,5 @@
 //! Structured representation of `.env` files
-use crate::EnvVar;
+pub use crate::EnvVar;
 use anyhow::anyhow;
 use std::{fs, ops::Deref, path::PathBuf};
 
