@@ -1,17 +1,7 @@
 //! Structured representation of `.env` files
-use std::{fs, ops::Deref, path::PathBuf};
-
+use crate::EnvVar;
 use anyhow::anyhow;
-
-/// Represents a single environment variable with an optional comment
-#[derive(Debug, Clone)]
-#[cfg_attr(test, derive(fake::Dummy))]
-pub struct EnvVar {
-    pub key: String,
-    pub value: String,
-    pub comment: Option<String>,
-    pub temp_id: uuid::Uuid,
-}
+use std::{fs, ops::Deref, path::PathBuf};
 
 /// Represents a file's worth of environment variables
 #[derive(Debug, Clone)]
@@ -56,38 +46,7 @@ impl DotEnvFile {
         // Map over all lines of the file, extracting variables while ignoring / filtering out empty lines and comments
         let envs = input
             .lines()
-            .filter_map(|line| {
-                // Trim the line for easier parsing
-                let trimmed_line = line.trim();
-
-                // If the line is a comment, return None
-                if trimmed_line.starts_with('#') {
-                    return None;
-                }
-
-                // If the line is blank, return None
-                if trimmed_line.is_empty() {
-                    return None;
-                }
-
-                // Split the line into content and comment (if one exists)
-                let (content, comment) = match line.split_once("#") {
-                    Some((content, comment)) => (content.trim(), Some(comment.trim())),
-                    None => (trimmed_line, None),
-                };
-
-                // Split the content into key and value, then construct `EnvVar`
-                content.split_once('=').map(|(key, value)| EnvVar {
-                    key: key.to_string(),
-                    value: value.to_string(),
-                    comment: if parse_comments {
-                        comment.map(ToOwned::to_owned)
-                    } else {
-                        None
-                    },
-                    temp_id: uuid::Uuid::new_v4(),
-                })
-            }) // Filter out any invalid line and unwrap the Option for the rest
+            .filter_map(|line| EnvVar::parse_from_str(line, parse_comments)) // Filter out any invalid line and unwrap the Option for the rest
             .collect::<Vec<EnvVar>>();
 
         if verbose {
@@ -108,7 +67,7 @@ impl Deref for DotEnvFile {
 }
 
 #[cfg(test)]
-mod env_parsing_tests {
+mod dotenv_parsing_tests {
     use std::io::Write;
 
     use tempfile::NamedTempFile;

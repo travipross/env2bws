@@ -1,8 +1,10 @@
 #![doc = include_str!("../README.md")]
-pub use dotenv::{DotEnvFile, EnvVar};
+pub use dotenv::DotEnvFile;
+pub use env_var::EnvVar;
 pub use import_payload::{ImportPayload, Project, ProjectAssignment, Secret};
 
 pub mod dotenv;
+pub mod env_var;
 pub mod import_payload;
 
 #[cfg(test)]
